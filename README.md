@@ -39,4 +39,4 @@ held untouched until final evaluation
 
 ## Status
 
-Step 3 — Regularization, Ridge, and Lasso
+Step 4 — ElasticNet and Statistical Inference (p-values vs Regularization)
