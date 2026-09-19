@@ -49,7 +49,7 @@ The permanent Test Set was not used during any tuning, search, kernel selection,
 - **Bias–Variance Tradeoff & Irreducible Error:** Diagnosing error components using training and cross-validation curves.
 - **Learning Curves:** Analyzing performance as training sample size scales.
 - **Regularization ($L_1, L_2$, ElasticNet):** Penalized loss formulations, shrinkage paths, and sparsity.
-- **Feature Scaling Before Regularization & SVR:** Why uniform scale is required for penalty and distance metrics.
+- **Feature Scaling Before Regularization & SVR:** Why comparable feature scales are important / strongly recommended for regularized models and SVR.
 - **Statistical Inference vs. Predictive Modeling:** Classical hypothesis testing ($p$-values) vs. regularization under multicollinearity.
 - **Hyperparameter Search Techniques:** Exhaustive grid search, randomized continuous sampling, and coarse-to-fine zooming.
 - **Support Vector Regression (SVR):** Hyperplanes, $\epsilon$-insensitive loss tubes, support vectors, convex optimization, and kernel trick.
@@ -58,13 +58,13 @@ The permanent Test Set was not used during any tuning, search, kernel selection,
 
 ## Key Findings
 
-- **Complexity Control:** Increasing polynomial degree on BMI improved training fit ($R^2 > 0.60$) but severely degraded cross-validation generalization ($R^2 < 0$), confirming severe overfitting.
-- **Learning Curves:** Visualized how simple models plateau early, while complex models exhibit a wide generalization gap that narrows as training size grows.
+- **Complexity Control:** On BMI alone, increasing polynomial degree slightly improved training fit but eventually caused severe validation instability. With all 10 features, polynomial expansion increased training $R^2$ much more strongly while validation performance deteriorated rapidly.
+- **Learning Curves:** The complex model showed substantially poorer validation behavior at smaller sample sizes. Validation behavior improved with more data, while a substantial Train–Validation gap remained.
 - **Regularization Behavior:** Ridge ($L_2$) smoothly shrunk all coefficients without sparsity; Lasso ($L_1$) drove coefficients to exact zeros (e.g., `s2` zeroed at $\alpha=0.05$), performing embedded feature selection.
-- **Statistical Inference:** Serum lipids `s1` and `s2` exhibited high collinearity ($r > 0.89$), causing OLS to assign large opposing coefficients ($-931.5$ and $+518.1$). Regularization damped these opposing swings to protect generalization.
+- **Statistical Inference:** Serum lipids `s1` and `s2` exhibited high collinearity ($r > 0.89$), causing OLS to assign large opposing coefficients ($-931.5$ and $+518.1$). Regularization damped these opposing swings, which constrains coefficient magnitude and can improve generalization when excessive flexibility is a problem.
 - **Hyperparameter Search:** `GridSearchCV` perfectly replicated manual `itertools` search. `RandomizedSearchCV` sampled continuous `stats.loguniform` priors efficiently, identifying high-performing parameter combinations.
 - **SVR Properties:** Scaling materially improved SVR performance ($0.3546 \to 0.4069$). $\epsilon$ governed support vector sparsity ($100\%$ at $\epsilon=0.1$ down to $9.9\%$ at $\epsilon=100$), and $\gamma$ controlled local Gaussian reach (myopia factor).
-- **Model Selection & Test Generalization:** Leading linear models yielded closely clustered CV scores ($0.4804 - 0.4810$). Model selection was executed prior to opening the test set; the frozen model achieved an independent Test $R^2$ of $0.4567$, closely matching cross-validation expectations.
+- **Model Selection & Test Generalization:** Leading linear models yielded closely clustered CV scores ($0.4804 - 0.4810$). Model selection was executed prior to opening the test set; the final Test $R^2$ of 0.4567 was reasonably consistent with the mean CV $R^2$ of 0.4810, with a difference of -0.0243.
 
 ## Final Model Selection
 
@@ -78,9 +78,9 @@ The permanent Test Set was not used during any tuning, search, kernel selection,
 | **Final Test $R^2$** | **0.4567** |
 | **Final Test MAE** | **42.8318** |
 | **Final Test RMSE** | **53.6522** |
-| **Generalization Difference** | **-0.0243** (well within $1\sigma$ CV std of $0.0396$) |
+| **Generalization Difference** | **-0.0243** |
 
-*Note: Final model selection was made strictly based on cross-validation evidence before the Test Set was opened.*
+*Note: Final model selection was made strictly based on cross-validation evidence before the Test Set was opened. The final Test $R^2$ of 0.4567 was reasonably consistent with the mean CV $R^2$ of 0.4810, with a difference of -0.0243. CV fold standard deviation describes variability across CV folds; it is not a formal confidence interval for the final Test score.*
 
 ## Lesson Coverage
 
