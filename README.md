@@ -39,4 +39,4 @@ held untouched until final evaluation
 
 ## Status
 
-Step 1 — Baseline and Evaluation Protocol
+Step 2 — Model Complexity and Learning Curves
