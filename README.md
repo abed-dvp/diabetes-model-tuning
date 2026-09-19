@@ -39,4 +39,4 @@ held untouched until final evaluation
 
 ## Status
 
-Step 2 — Model Complexity and Learning Curves
+Step 3 — Regularization, Ridge, and Lasso
